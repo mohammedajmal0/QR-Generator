@@ -1,19 +1,18 @@
-import React, { useState } from "react";
-import "./App.css";
-import * as XLSX from "xlsx";
+import jsPDF from "jspdf";
 import QRCode from "qrcode";
-import Logo from "./assets/logo-qr.png";
+import React, { useState } from "react";
+import * as XLSX from "xlsx";
+import "./App.css";
 import Certificate from "./Certificate";
-import html2canvas from "html2canvas";
-import jsPDF from "jspdf"; 
 
-const BASE_URL = 'https://7244-176-16-82-123.ngrok-free.app'
+const BASE_URL = 'http://localhost:9098'
 
 const App = () => {
   const [excelData, setExcelData] = useState([]);
   const [documentType, setDocumentType] = useState("certificate");
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [currentData, setCurrentData] = useState(null);
+  const [generatedCertificates, setGeneratedCertificates] = useState([]);
 
   // Handle Excel file upload
   const handleFileUpload = (e) => {
@@ -51,44 +50,182 @@ const App = () => {
     }
   };
 
-  const handleGenerate = () => {
+  const handleGenerate =  async () => {
     console.log("Current Data:", currentData);
     if (excelData.length === 0 || !documentType) {
       alert("Please upload an Excel file and select a document type.");
       return;
     }
+
+    const generatedData = [];
+    for(const row of excelData){
+      const uniqueId = `qrId-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      
+    
+        // Generate a unique ID for each row (or use an existing field)
+        const dataToEncode = uniqueIdGenerator(); 
+        
   
-    const dataToEncode = `Name: ${currentData.Name}, Course: ${currentData.Course}, Date: ${currentData.Date}`;
-    generateQRCode(dataToEncode).then(() => {
-      uploadCertificateAsPDF();
-    });
+        // Generate QR code (assuming generateQRCode is an async function)
+        await generateQRCode(dataToEncode);
+  
+        // Add QR code data to the row (if needed)
+        generatedData.push({
+          ...row,
+          uniqueId,
+          qrCodeUrl,
+        });
+        
+    }
+
+    setGeneratedCertificates(generatedData);
+    // const dataToEncode = uniqueIdGenerator();
+    // generateQRCode(dataToEncode).then(() => {
+    //   uploadCertificateAsPDF();
+    // });
   };
   
   // Fn to generate and upload the certificate as a PDF
-  const uploadCertificateAsPDF = () => {
-    const certificateElement = document.querySelector(".certificate-container");
+  // const uploadCertificateAsPDF = (row) => {
+  //   const certificateElement = document.querySelector(".certificate-container");
   
-    if (certificateElement) {
-      html2canvas(certificateElement, { scale: 2 }).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
+  //   if (certificateElement) {
+  //     html2canvas(certificateElement, { scale: 2 }).then((canvas) => {
+  //       const imgData = canvas.toDataURL("image/png");
   
-        const pdf = new jsPDF({
-          orientation: "landscape",
-          unit: "px",
-          format: [canvas.width, canvas.height],
-        });
+  //       const pdf = new jsPDF({
+  //         orientation: "landscape",
+  //         unit: "px",
+  //         format: [canvas.width, canvas.height],
+  //       });
   
-        pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+  //       pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
   
-        // Convert PDF to Blob
+  //       // Convert PDF to Blob
+  //       const pdfBlob = pdf.output("blob");
+  
+  //       // Create FormData to send the PDF as a file
+  //       const formData = new FormData();
+  //       formData.append("file", pdfBlob, "certificate.pdf");
+  //       formData.append("fileType", "application/pdf");  
+  
+  //       fetch(`${BASE_URL}/api/upload?fileName=${row.usn}`, {
+  //         method: "POST",
+  //         body: formData,
+  //       })
+  //         .then((response) => response.json())
+  //         .then((data) => {
+  //           console.log("Certificate uploaded successfully:", data);
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error uploading certificate:", error);
+  //         });
+  //     });
+  //   }
+  // };
+
+  const uniqueIdGenerator= ()=>{
+    return `qrId : ${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+  }
+
+  // const uploadCertificates = (certificates) => {
+  //   certificates.forEach((cert) => {
+  //     html2canvas(document.getElementById(`cert-${cert.uniqueId}`), { scale: 2 }).then((canvas) => {
+  //       const imgData = canvas.toDataURL("image/png");
+
+  //       const pdf = new jsPDF({
+  //         orientation: "landscape",
+  //         unit: "px",
+  //         format: [canvas.width, canvas.height],
+  //       });
+
+  //       pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+
+  //       // Convert PDF to Blob
+  //       const pdfBlob = pdf.output("blob");
+
+  //       // Upload certificate PDF to server
+  //       const formData = new FormData();
+  //       formData.append("file", pdfBlob, `${cert.Name}_certificate.pdf`);
+  //       formData.append("fileType", "application/pdf");
+
+  //       fetch(`${BASE_URL}/api/upload?fileName=${cert.usn}`, {
+  //         method: "POST",
+  //         body: formData,
+  //       })
+  //         .then((response) => response.json())
+  //         .then((data) => {
+  //           console.log("Certificate uploaded successfully:", data);
+  //         })
+  //         .catch((error) => {
+  //           console.error("Error uploading certificate:", error);
+  //         });
+  //     });
+  //   });
+  // };
+
+  const uploadCertificates = (certificates) => {
+    certificates.forEach((cert) => {
+      // Create a new PDF document
+      const pdf = new jsPDF({
+        orientation: "landscape",
+        unit: "px",
+        format: "a4", // A4 size paper
+      });
+  
+      // Add text content to the PDF
+      pdf.setFontSize(24);
+      pdf.text(`Certificate of Completion`, 100, 50);
+      pdf.setFontSize(16);
+      pdf.text(`This certifies that`, 100, 100);
+      pdf.setFontSize(20);
+      pdf.text(cert.Name, 100, 130); // Student Name
+      pdf.setFontSize(16);
+      pdf.text(`has completed the course`, 100, 160);
+      pdf.text(cert.Course, 100, 190); // Course Name
+      pdf.text(`Date: ${cert.Date}`, 100, 220); // Date
+  
+      // Add the QR Code image if available
+      if (cert.qrCodeUrl) {
+        const qrImage = new Image();
+        qrImage.src = cert.qrCodeUrl;
+  
+        qrImage.onload = () => {
+          // Draw QR Code image at specified position
+          pdf.addImage(qrImage, "PNG", 100, 250, 50, 50); // Change dimensions as needed
+  
+          // Convert PDF to Blob
+          const pdfBlob = pdf.output("blob");
+  
+          // Create FormData to send the PDF as a file
+          const formData = new FormData();
+          formData.append("file", pdfBlob, `${cert.usn}.pdf`); // Use {usn}.pdf as filename
+          formData.append("fileType", "application/pdf");
+  
+          // Upload the PDF to the server
+          fetch(`${BASE_URL}/api/upload?fileName=${cert.usn}`, {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Certificate uploaded successfully:", data);
+            })
+            .catch((error) => {
+              console.error("Error uploading certificate:", error);
+            });
+        };
+      } else {
+        // Convert PDF to Blob if no QR code
         const pdfBlob = pdf.output("blob");
   
         // Create FormData to send the PDF as a file
         const formData = new FormData();
-        formData.append("fileData", pdfBlob, "certificate.pdf");
-        formData.append("fileType", "application/pdf");  
+        formData.append("file", pdfBlob, `${cert.usn}.pdf`); // Use {usn}.pdf as filename
+        formData.append("fileType", "application/pdf");
   
-        fetch(`${BASE_URL}/api/upload`, {
+        // Upload the PDF to the server
+        fetch(`${BASE_URL}/api/upload?fileName=${cert.usn}`, {
           method: "POST",
           body: formData,
         })
@@ -99,8 +236,8 @@ const App = () => {
           .catch((error) => {
             console.error("Error uploading certificate:", error);
           });
-      });
-    }
+      }
+    });
   };
 
   return (
@@ -123,6 +260,7 @@ const App = () => {
           className="document-select"
         >
           <option value="certificate">Certificate</option>
+          <option value="certificate2">Certificate2</option>
         </select>
 
         <button onClick={handleGenerate} className="generate-button">
@@ -130,7 +268,8 @@ const App = () => {
         </button>
       </div>
 
-      {currentData && qrCodeUrl && (
+
+      {/* {currentData && qrCodeUrl && (
         <>
           <Certificate
             name={currentData.Name}
@@ -139,7 +278,22 @@ const App = () => {
             qrCodeUrl={qrCodeUrl}
           />
         </>
-      )}
+      )} */}
+       {/* Render Generated Certificates */}
+       {generatedCertificates.map((cert, index) => (
+        <div key={index} id={`cert-${cert.uniqueId}`} className="certificate-container">
+          <Certificate
+            name={cert.Name}
+            course={cert.Course}
+            date={cert.Date}
+            qrCodeUrl={cert.qrCodeUrl}
+          />
+        </div>
+      ))}
+
+      <button onClick={() => uploadCertificates(generatedCertificates)} className="upload-button">
+        Upload All Certificates
+      </button>
     </div>
   );
 };

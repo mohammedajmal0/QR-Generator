@@ -1,4 +1,4 @@
-import jsPDF from "jspdf";
+import html2pdf from "html2pdf.js";
 import QRCode from "qrcode";
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
@@ -85,70 +85,75 @@ const App = () => {
     // });
   };
   
-  // Fn to generate and upload the certificate as a PDF
-  // const uploadCertificateAsPDF = (row) => {
-  //   const certificateElement = document.querySelector(".certificate-container");
   
-  //   if (certificateElement) {
-  //     html2canvas(certificateElement, { scale: 2 }).then((canvas) => {
-  //       const imgData = canvas.toDataURL("image/png");
-  
-  //       const pdf = new jsPDF({
-  //         orientation: "landscape",
-  //         unit: "px",
-  //         format: [canvas.width, canvas.height],
-  //       });
-  
-  //       pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-  
-  //       // Convert PDF to Blob
-  //       const pdfBlob = pdf.output("blob");
-  
-  //       // Create FormData to send the PDF as a file
-  //       const formData = new FormData();
-  //       formData.append("file", pdfBlob, "certificate.pdf");
-  //       formData.append("fileType", "application/pdf");  
-  
-  //       fetch(`${BASE_URL}/api/upload?fileName=${row.usn}`, {
-  //         method: "POST",
-  //         body: formData,
-  //       })
-  //         .then((response) => response.json())
-  //         .then((data) => {
-  //           console.log("Certificate uploaded successfully:", data);
-  //         })
-  //         .catch((error) => {
-  //           console.error("Error uploading certificate:", error);
-  //         });
-  //     });
-  //   }
-  // };
 
   const uniqueIdGenerator= ()=>{
     return `qrId : ${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
   }
 
+  
+
   // const uploadCertificates = (certificates) => {
   //   certificates.forEach((cert) => {
-  //     html2canvas(document.getElementById(`cert-${cert.uniqueId}`), { scale: 2 }).then((canvas) => {
-  //       const imgData = canvas.toDataURL("image/png");
-
-  //       const pdf = new jsPDF({
-  //         orientation: "landscape",
-  //         unit: "px",
-  //         format: [canvas.width, canvas.height],
-  //       });
-
-  //       pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
-
-  //       // Convert PDF to Blob
+  //     // Create a new PDF document
+  //     const pdf = new jsPDF({
+  //       orientation: "landscape",
+  //       unit: "px",
+  //       format: "a4", // A4 size paper
+  //     });
+  
+  //     // Add text content to the PDF
+  //     pdf.setFontSize(24);
+  //     pdf.text(`Certificate of Completion`, 100, 50);
+  //     pdf.setFontSize(16);
+  //     pdf.text(`This certifies that`, 100, 100);
+  //     pdf.setFontSize(20);
+  //     pdf.text(cert.Name, 100, 130); // Student Name
+  //     pdf.setFontSize(16);
+  //     pdf.text(`has completed the course`, 100, 160);
+  //     pdf.text(cert.Course, 100, 190); // Course Name
+  //     pdf.text(`Date: ${cert.Date}`, 100, 220); // Date
+  
+  //     // Add the QR Code image if available
+  //     if (cert.qrCodeUrl) {
+  //       const qrImage = new Image();
+  //       qrImage.src = cert.qrCodeUrl;
+  
+  //       qrImage.onload = () => {
+  //         // Draw QR Code image at specified position
+  //         pdf.addImage(qrImage, "PNG", 100, 250, 50, 50); // Change dimensions as needed
+  
+  //         // Convert PDF to Blob
+  //         const pdfBlob = pdf.output("blob");
+  
+  //         // Create FormData to send the PDF as a file
+  //         const formData = new FormData();
+  //         formData.append("file", pdfBlob, `${cert.usn}.pdf`); // Use {usn}.pdf as filename
+  //         formData.append("fileType", "application/pdf");
+  
+  //         // Upload the PDF to the server
+  //         fetch(`${BASE_URL}/api/upload?fileName=${cert.usn}`, {
+  //           method: "POST",
+  //           body: formData,
+  //         })
+  //           .then((response) => response.json())
+  //           .then((data) => {
+  //             console.log("Certificate uploaded successfully:", data);
+  //           })
+  //           .catch((error) => {
+  //             console.error("Error uploading certificate:", error);
+  //           });
+  //       };
+  //     } else {
+  //       // Convert PDF to Blob if no QR code
   //       const pdfBlob = pdf.output("blob");
-
-  //       // Upload certificate PDF to server
+  
+  //       // Create FormData to send the PDF as a file
   //       const formData = new FormData();
-  //       formData.append("file", pdfBlob, `${cert.Name}_certificate.pdf`);
+  //       formData.append("file", pdfBlob, `${cert.usn}.pdf`); // Use {usn}.pdf as filename
   //       formData.append("fileType", "application/pdf");
-
+  
+  //       // Upload the PDF to the server
   //       fetch(`${BASE_URL}/api/upload?fileName=${cert.usn}`, {
   //         method: "POST",
   //         body: formData,
@@ -160,85 +165,52 @@ const App = () => {
   //         .catch((error) => {
   //           console.error("Error uploading certificate:", error);
   //         });
-  //     });
+  //     }
   //   });
   // };
 
   const uploadCertificates = (certificates) => {
+    console.log("uploading..........")
     certificates.forEach((cert) => {
-      // Create a new PDF document
-      const pdf = new jsPDF({
-        orientation: "landscape",
-        unit: "px",
-        format: "a4", // A4 size paper
-      });
-  
-      // Add text content to the PDF
-      pdf.setFontSize(24);
-      pdf.text(`Certificate of Completion`, 100, 50);
-      pdf.setFontSize(16);
-      pdf.text(`This certifies that`, 100, 100);
-      pdf.setFontSize(20);
-      pdf.text(cert.Name, 100, 130); // Student Name
-      pdf.setFontSize(16);
-      pdf.text(`has completed the course`, 100, 160);
-      pdf.text(cert.Course, 100, 190); // Course Name
-      pdf.text(`Date: ${cert.Date}`, 100, 220); // Date
-  
-      // Add the QR Code image if available
-      if (cert.qrCodeUrl) {
-        const qrImage = new Image();
-        qrImage.src = cert.qrCodeUrl;
-  
-        qrImage.onload = () => {
-          // Draw QR Code image at specified position
-          pdf.addImage(qrImage, "PNG", 100, 250, 50, 50); // Change dimensions as needed
-  
-          // Convert PDF to Blob
-          const pdfBlob = pdf.output("blob");
-  
-          // Create FormData to send the PDF as a file
-          const formData = new FormData();
-          formData.append("file", pdfBlob, `${cert.usn}.pdf`); // Use {usn}.pdf as filename
-          formData.append("fileType", "application/pdf");
-  
-          // Upload the PDF to the server
-          fetch(`${BASE_URL}/api/upload?fileName=${cert.usn}`, {
-            method: "POST",
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then((data) => {
-              console.log("Certificate uploaded successfully:", data);
-            })
-            .catch((error) => {
-              console.error("Error uploading certificate:", error);
-            });
+      const certificateElement = document.getElementById(`cert-${cert.uniqueId}`);
+      
+      if (certificateElement) {
+        // Use html2pdf to generate PDF from HTML
+        const opt = {
+          margin: 1,
+          filename: `${cert.usn}.pdf`, // File name based on the 'usn'
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: { scale: 2 }, // Adjust scale for better quality
+          jsPDF: { unit: 'in', format: 'letter', orientation: 'landscape' } // Orientation based on your requirement
         };
-      } else {
-        // Convert PDF to Blob if no QR code
-        const pdfBlob = pdf.output("blob");
+        
+        // Generate PDF and upload it to the server
+        html2pdf()
+          .from(certificateElement)
+          .set(opt)
+          .output('blob') // Output the PDF as a Blob to be uploaded
+          .then((pdfBlob) => {
+            // Create FormData to send the PDF as a file
+            const formData = new FormData();
+            formData.append("file", pdfBlob, `${cert.usn}.pdf`);
+            formData.append("fileType", "application/pdf");
   
-        // Create FormData to send the PDF as a file
-        const formData = new FormData();
-        formData.append("file", pdfBlob, `${cert.usn}.pdf`); // Use {usn}.pdf as filename
-        formData.append("fileType", "application/pdf");
-  
-        // Upload the PDF to the server
-        fetch(`${BASE_URL}/api/upload?fileName=${cert.usn}`, {
-          method: "POST",
-          body: formData,
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Certificate uploaded successfully:", data);
-          })
-          .catch((error) => {
-            console.error("Error uploading certificate:", error);
+            fetch(`${BASE_URL}/api/upload?fileName=${cert.usn}`, {
+              method: "POST",
+              body: formData,
+            })
+              .then((response) => response.json())
+              .then((data) => {
+                console.log("Certificate uploaded successfully:", data);
+              })
+              .catch((error) => {
+                console.error("Error uploading certificate:", error);
+              });
           });
       }
     });
   };
+  
 
   return (
     <div className="App">

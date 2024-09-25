@@ -4,6 +4,10 @@ import * as XLSX from "xlsx";
 import QRCode from "qrcode";
 import Logo from "./assets/logo-qr.png";
 import Certificate from "./Certificate";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf"; 
+
+const BASE_URL = 'https://7244-176-16-82-123.ngrok-free.app'
 
 const App = () => {
   const [excelData, setExcelData] = useState([]);
@@ -28,7 +32,7 @@ const App = () => {
 
       // Check if there is data in the Excel file
       if (jsonData.length > 0) {
-        setCurrentData(jsonData[0]); 
+        setCurrentData(jsonData[0]);
       } else {
         alert("No data found in the uploaded Excel file.");
       }
@@ -47,16 +51,56 @@ const App = () => {
     }
   };
 
-  // Handle form submission (Generate certificate)
   const handleGenerate = () => {
     console.log("Current Data:", currentData);
     if (excelData.length === 0 || !documentType) {
       alert("Please upload an Excel file and select a document type.");
       return;
     }
-
-    const dataToEncode = `Name: ${currentData.Name}, Course: ${currentData.Course}, Date: ${currentData.Date}`; // Modify according to Excel column names
-    generateQRCode(dataToEncode); // Generate QR code based on data
+  
+    const dataToEncode = `Name: ${currentData.Name}, Course: ${currentData.Course}, Date: ${currentData.Date}`;
+    generateQRCode(dataToEncode).then(() => {
+      uploadCertificateAsPDF();
+    });
+  };
+  
+  // Fn to generate and upload the certificate as a PDF
+  const uploadCertificateAsPDF = () => {
+    const certificateElement = document.querySelector(".certificate-container");
+  
+    if (certificateElement) {
+      html2canvas(certificateElement, { scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+  
+        const pdf = new jsPDF({
+          orientation: "landscape",
+          unit: "px",
+          format: [canvas.width, canvas.height],
+        });
+  
+        pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+  
+        // Convert PDF to Blob
+        const pdfBlob = pdf.output("blob");
+  
+        // Create FormData to send the PDF as a file
+        const formData = new FormData();
+        formData.append("fileData", pdfBlob, "certificate.pdf");
+        formData.append("fileType", "application/pdf");  
+  
+        fetch(`${BASE_URL}/api/upload`, {
+          method: "POST",
+          body: formData,
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Certificate uploaded successfully:", data);
+          })
+          .catch((error) => {
+            console.error("Error uploading certificate:", error);
+          });
+      });
+    }
   };
 
   return (
@@ -87,12 +131,14 @@ const App = () => {
       </div>
 
       {currentData && qrCodeUrl && (
-        <Certificate
-          name={currentData.Name}
-          course={currentData.Course}
-          date={currentData.Date}
-          qrCodeUrl={qrCodeUrl}
-        />
+        <>
+          <Certificate
+            name={currentData.Name}
+            course={currentData.Course}
+            date={currentData.Date}
+            qrCodeUrl={qrCodeUrl}
+          />
+        </>
       )}
     </div>
   );

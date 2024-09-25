@@ -30,12 +30,6 @@ const Certificate = ({ name, course, date, qrCodeUrl }) => {
   );
 };
 
-Certificate.defaultProps = {
-  name: 'James Lee',
-  course: 'Creating PDFs with React & Make.cm',
-  date: 'March 15 2021',
-};
-
 const Icon = () => (
   <svg width="99" height="139" viewBox="0 0 99 139" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M0 0H99V138.406L52.1955 118.324L0 138.406V0Z" fill="white" />

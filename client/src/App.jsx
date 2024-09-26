@@ -5,7 +5,7 @@ import * as XLSX from "xlsx";
 import "./App.css";
 import Certificate from "./Certificate";
 
-const BASE_URL = 'http://localhost:9098'
+const BASE_URL = 'https://a215-176-16-82-123.ngrok-free.app'
 
 const App = () => {
   const [excelData, setExcelData] = useState([]);
@@ -50,40 +50,73 @@ const App = () => {
     }
   };
 
-  const handleGenerate =  async () => {
-    console.log("Current Data:", currentData);
+  // const handleGenerate =  async () => {
+  //   console.log("Current Data:", currentData);
+  //   if (excelData.length === 0 || !documentType) {
+  //     alert("Please upload an Excel file and select a document type.");
+  //     return;
+  //   }
+
+  //   const generatedData = [];
+  //   for(const row of excelData){
+  //     const uniqueId = `qrId-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+      
+    
+  //       // Generate a unique ID for each row (or use an existing field)
+  //       const dataToEncode = uniqueIdGenerator(); 
+        
+  
+  //       // Generate QR code (assuming generateQRCode is an async function)
+  //       await generateQRCode(dataToEncode);
+  
+  //       // Add QR code data to the row (if needed)
+  //       generatedData.push({
+  //         ...row,
+  //         uniqueId,
+  //         qrCodeUrl,
+  //       });
+        
+  //   }
+
+  //   setGeneratedCertificates(generatedData);
+  //   // const dataToEncode = uniqueIdGenerator();
+  //   // generateQRCode(dataToEncode).then(() => {
+  //   //   uploadCertificateAsPDF();
+  //   // });
+  // };
+
+  const handleGenerate = async () => {
     if (excelData.length === 0 || !documentType) {
       alert("Please upload an Excel file and select a document type.");
       return;
     }
-
+  
     const generatedData = [];
-    for(const row of excelData){
-      const uniqueId = `qrId-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-      
-    
-        // Generate a unique ID for each row (or use an existing field)
-        const dataToEncode = uniqueIdGenerator(); 
-        
+    for (const row of excelData) {
+      const uniqueId = uniqueIdGenerator(); 
   
-        // Generate QR code (assuming generateQRCode is an async function)
-        await generateQRCode(dataToEncode);
+      try {
+        // Generate QR code URL synchronously for each certificate
+        const qrCodeUrl = await QRCode.toDataURL(uniqueId);
   
-        // Add QR code data to the row (if needed)
+        // Log the generated QR Code URL to check
+        console.log("Generated QR Code URL:", qrCodeUrl);
+  
+        // Push generated certificate data to array
         generatedData.push({
           ...row,
           uniqueId,
-          qrCodeUrl,
+          qrCodeUrl,  // Attach the generated QR code URL to each certificate
         });
-        
+      } catch (error) {
+        console.error("Error generating QR code for row", row, error);
+      }
     }
-
+  
+    // Now set the generated certificates after the loop completes
     setGeneratedCertificates(generatedData);
-    // const dataToEncode = uniqueIdGenerator();
-    // generateQRCode(dataToEncode).then(() => {
-    //   uploadCertificateAsPDF();
-    // });
   };
+  
   
   // Fn to generate and upload the certificate as a PDF
   // const uploadCertificateAsPDF = (row) => {
@@ -185,6 +218,7 @@ const App = () => {
       pdf.text(cert.Course, 100, 190); // Course Name
       pdf.text(`Date: ${cert.Date}`, 100, 220); // Date
   
+      console.log(cert)
       // Add the QR Code image if available
       if (cert.qrCodeUrl) {
         const qrImage = new Image();
@@ -281,7 +315,7 @@ const App = () => {
       )} */}
        {/* Render Generated Certificates */}
        {generatedCertificates.map((cert, index) => (
-        <div key={index} id={`cert-${cert.uniqueId}`} className="certificate-container">
+        <div key={index} id={`cert-${cert.uniqueId}`} className="certificate-cont">
           <Certificate
             name={cert.Name}
             course={cert.Course}

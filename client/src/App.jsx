@@ -92,11 +92,11 @@ const App = () => {
 
     const generatedData = [];
     for (const row of excelData) {
-      const uniqueId = uniqueIdGenerator();
+      const QrId = uniqueIdGenerator();
 
       try {
         // Generate QR code URL synchronously for each certificate
-        const qrCodeUrl = await QRCode.toDataURL(uniqueId);
+        const qrCodeUrl = await QRCode.toDataURL(QrId);
 
         // Log the generated QR Code URL to check
         console.log("Generated QR Code URL:", qrCodeUrl);
@@ -104,9 +104,10 @@ const App = () => {
         // Push generated certificate data to array
         generatedData.push({
           ...row,
-          uniqueId,
+          QrId,
           qrCodeUrl, // Attach the generated QR code URL to each certificate
         });
+
       } catch (error) {
         console.error("Error generating QR code for row", row, error);
       }
@@ -114,6 +115,27 @@ const App = () => {
 
     // Now set the generated certificates after the loop completes
     setGeneratedCertificates(generatedData);
+    console.log(generatedData);
+
+    uploadGeneratedData(generatedData)
+    
+  };
+
+  const uploadGeneratedData = async (data) => {
+    try {
+      const response = await fetch(`${BASE_URL}/api/data`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+  
+      const result = await response.json();
+      console.log("Data uploaded successfully:", result);
+    } catch (error) {
+      console.error("Error uploading data to backend:", error);
+    }
   };
 
   // Fn to generate and upload the certificate as a PDF
@@ -156,7 +178,7 @@ const App = () => {
   // };
 
   const uniqueIdGenerator = () => {
-    return `qrId : ${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
+    return `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
   };
 
   // const uploadCertificates = (certificates) => {
@@ -287,7 +309,8 @@ const App = () => {
         });
 
         // Add the image to the PDF
-        pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height);
+        pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height, undefined, "FAST");//FAST compress the pdf
+        // pdf.save(`${cert.usn}.pdf`)
 
         // Convert the PDF to a Blob
         const pdfBlob = pdf.output("blob");

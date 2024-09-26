@@ -1,5 +1,5 @@
-import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
 import QRCode from "qrcode";
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
@@ -297,7 +297,7 @@ const App = () => {
   const uploadCertificates = (certificates) => {
     certificates.forEach((cert) => {
       // Capture the certificate layout as an image using html2canvas
-      html2canvas(document.getElementById(`cert-${cert.uniqueId}`), {
+      html2canvas(document.getElementById(`cert-${cert.QrId}`), {
         scale: 2,
       }).then((canvas) => {
         const imgData = canvas.toDataURL("image/png");
@@ -388,7 +388,7 @@ const App = () => {
       {generatedCertificates.map((cert, index) => (
         <div
           key={index}
-          id={`cert-${cert.uniqueId}`}
+          id={`cert-${cert.QrId}`}
           className="certificate-cont"
         >
           <Certificate

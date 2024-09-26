@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Poppins:wght@800&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500&family=Poppins:wght@800&display=swap');
 
 :root {
   --blue: #0379FF;
@@ -154,4 +154,106 @@ svg {
 
 .bold {
   font-weight: 500;
+} */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f4f4f9;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.certificate-container {
+  border: 15px solid #007bff;
+  padding: 40px;
+  width: 900px;
+  background-color: white;
+  box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.certificate-header {
+  margin-bottom: 30px;
+}
+
+.university-name {
+  font-family: 'Georgia', serif;
+  font-size: 36px;
+  color: #003366;
+  margin-bottom: 5px;
+}
+
+.certificate-title {
+  font-family: 'Times New Roman', serif;
+  font-size: 28px;
+  color: #000;
+  margin: 0;
+}
+
+.certificate-body {
+  margin: 30px 0;
+}
+
+.content-text {
+  font-size: 18px;
+  color: #333;
+  margin: 10px 0;
+  font-family: 'Times New Roman', serif;
+}
+
+.recipient-name {
+  font-size: 30px;
+  color: #007bff;
+  margin: 10px 0;
+  font-family: 'Georgia', serif;
+}
+
+.course-name {
+  font-size: 24px;
+  font-family: 'Times New Roman', serif;
+  margin-bottom: 20px;
+}
+
+.issued-date {
+  font-size: 16px;
+  font-family: 'Arial', sans-serif;
+  color: #555;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.certificate-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.signature-section {
+  width: 40%;
+  text-align: left;
+}
+
+.signature-label {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.signature-line {
+  border-top: 2px solid #333;
+  width: 80%;
+  margin-top: 5px;
+}
+
+.qrCode-section {
+  width: 20%;
+}
+
+.qrCode {
+  width: 80px;
+  height: 80px;
 }

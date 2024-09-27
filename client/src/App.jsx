@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import "./App.css";
 import Certificate from "./Certificate";
+import Certificate2 from "./Certificate2";
 
 const BASE_URL = "https://07c3-176-16-82-123.ngrok-free.app";
 
@@ -391,7 +392,13 @@ const App = () => {
           id={`cert-${cert.QrId}`}
           className="certificate-cont"
         >
-          <Certificate
+          {/* <Certificate
+            name={cert.Name}
+            course={cert.Course}
+            date={cert.Date}
+            qrCodeUrl={cert.qrCodeUrl}
+          /> */}
+          <Certificate2
             name={cert.Name}
             course={cert.Course}
             date={cert.Date}
@@ -399,6 +406,9 @@ const App = () => {
           />
         </div>
       ))}
+
+
+      {/* <Certificate2/> */}
     </div>
   );
 };

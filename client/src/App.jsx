@@ -6,7 +6,7 @@ import * as XLSX from "xlsx";
 import "./App.css";
 import Certificate from "./Certificate";
 
-const BASE_URL = "https://a215-176-16-82-123.ngrok-free.app";
+const BASE_URL = "https://07c3-176-16-82-123.ngrok-free.app";
 
 const App = () => {
   const [excelData, setExcelData] = useState([]);

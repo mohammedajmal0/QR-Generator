@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import './App.css';
 import Navbar from './Navbar';
+import QrDataComponent from './QrDataComp';
 import QrGenerator from './QrGenerator';
 import QrVerifyComponent from './QrVerify';
 
@@ -17,6 +18,7 @@ const App = () => {
         <Routes>
           <Route path="/" element={<QrGenerator />} />
           <Route path="/verify" element={<QrVerifyComponent />} />
+          <Route path='/qr/:qrId' Component={QrDataComponent}></Route>
         </Routes>
       </div>
     </Router>

@@ -7,18 +7,18 @@ import QrGenerator from './QrGenerator';
 import QrVerifyComponent from './QrVerify';
 
 const App = () => {
-  const [view, setView] = useState('generator');
+  // const [view, setView] = useState('generator');
 
   return (
     <Router>
       <div className="App">
-        <h1 className="app-title">QR Code Generator for Certificate</h1>
-        <Navbar setView={setView} />
+        {/* <h1 className="app-title">QR Code Generator for Certificate</h1> */}
+        {/* <Navbar setView={setView} /> */}
 
         <Routes>
           <Route path="/" element={<QrGenerator />} />
-          <Route path="/verify" element={<QrVerifyComponent />} />
-          <Route path='/qr/:qrId' Component={QrDataComponent}></Route>
+          {/* <Route path="/verify" element={<QrVerifyComponent />} /> */}
+          <Route path='/qr/:qrId' element={<QrDataComponent/>}></Route>
         </Routes>
       </div>
     </Router>

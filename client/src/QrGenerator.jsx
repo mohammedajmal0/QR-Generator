@@ -7,7 +7,7 @@ import "./App.css";
 import Certificate2 from "./Certificate2";
 
 const BASE_URL = "http://localhost:9098";
-const FE_URL="https://7d1c-130-185-144-25.ngrok-free.app"
+const FE_URL="https://f1a2-78-129-150-13.ngrok-free.app"
 
 const QrGenerator = () => {
   const [excelData, setExcelData] = useState([]);
@@ -175,7 +175,7 @@ const handleFileUpload = (e) => {
 
   const uploadGeneratedData = async (data) => {
     try {
-      const response = await fetch(`${BASE_URL}/api/data`, {
+      const response = await fetch(`${FE_URL}/api/data`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -209,11 +209,11 @@ const handleFileUpload = (e) => {
         const pdf = new jsPDF({
           orientation: "landscape",
           unit: "px",
-          format: [canvas.width, canvas.height], // Fit the PDF size to the certificate size
+          format: [canvas.width, canvas.height + 100],
         });
 
         // Add the image to the PDF
-        pdf.addImage(imgData, "PNG", 0, 0, canvas.width, canvas.height, undefined, "FAST");//FAST compress the pdf
+        pdf.addImage(imgData, "PNG", 0, 50, canvas.width, canvas.height, undefined, "FAST");//FAST compress the pdf
         // pdf.save(`${cert.RegisterNumber}.pdf`)
 
         // Convert the PDF to a Blob
@@ -225,7 +225,7 @@ const handleFileUpload = (e) => {
         formData.append("fileType", "application/pdf");
 
         // Upload the certificate PDF to the server
-        fetch(`${BASE_URL}/api/upload?fileName=${cert.RegisterNumber}`, {
+        fetch(`${FE_URL}/api/upload?fileName=${cert.RegisterNumber}`, {
           method: "POST",
           body: formData,
         })
@@ -242,6 +242,9 @@ const handleFileUpload = (e) => {
 
   return (
     <div className="App">
+
+        <h1 className="app-title">QR Code Generator</h1>
+
 
       <div className="upload-section">
         {/* File Upload */}

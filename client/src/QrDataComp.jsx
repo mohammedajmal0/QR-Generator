@@ -2,14 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './QrDataComp.css'; // Import the CSS file
 
+import check from './assets/check.png'
+
+const mockData = {
+  name: "John Doe",
+  registrationNumber: "2023-7890-1XXX",
+  qrId: "QR12345"
+};
+
 const QrDataComponent = () => {
   const { qrId } = useParams(); // Extract QrId from the URL
   const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const fetchData = async (qrId) => {
     try {
+      setLoading(true);
       const response = await fetch(`http://localhost:9098/api/qr-data/${qrId}`); // Replace with your API endpoint
       if (!response.ok) {
         throw new Error('Failed to fetch data');
@@ -39,17 +48,52 @@ const QrDataComponent = () => {
   }
 
   return (
-    <div className="qr-data-container">
-      <h2>QR Code Data for ID: {qrId}</h2>
-      {data ? (
-        <div>
-          <h3>Details:</h3>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
+    // <div className="qr-data-container">
+    //   <h2>QR Code Data for ID: {qrId}</h2>
+    //   {data ? (
+    //     <div>
+    //       <h3>Details:</h3>
+    //       <pre>{JSON.stringify(data, null, 2)}</pre>
+    //     </div>
+    //   ) : (
+    //     <p>No data found for this QR ID.</p>
+    //   )}
+    // </div>
+    <>
+
+    {data ? (
+
+    <div className='w-screen h-screen flex items-center justify-center'>
+
+    <div className="w-full max-w-md mx-auto bg-white shadow-2xl rounded-lg overflow-hidden">
+      <div className="p-6">
+        <div className="flex flex-col items-center mb-6">
+          <img src={check} alt="Check" className="w-16 h-16 text-green-500 mb-2" />
+          <h2 className="text-2xl font-bold text-gray-800">Data Verified</h2>
         </div>
-      ) : (
-        <p>No data found for this QR ID.</p>
-      )}
+        <div className="space-y-4">
+          <div>
+            <p className="text-sm text-gray-500">Name</p>
+            <p className="font-medium text-gray-800">{data?.Name || mockData.name}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">Registration Number</p>
+            <p className="font-medium text-gray-800">{data?.RegistrationNumber || mockData.registrationNumber}</p>
+          </div>
+          <div>
+            <p className="text-sm text-gray-500">QR ID</p>
+            <p className="font-medium text-gray-800">{data?.QrId || mockData.qrId}</p>
+          </div>
+        </div>
+      </div>
     </div>
+    </div>
+    ) : (
+      <p>No data found for this QR ID.</p>
+    )}
+
+</>
+
   );
 };
 

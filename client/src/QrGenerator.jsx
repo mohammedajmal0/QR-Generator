@@ -5,11 +5,12 @@ import React, { useState } from "react";
 import * as XLSX from "xlsx";
 import "./App.css";
 import Certificate2 from "./Certificate2";
+import {FE_URL} from '../config.jsx';
 
-const BASE_URL = "http://localhost:9098";
+//const BASE_URL = "http://localhost:9098";
 // const BASE_URL = "https://cryptocheck-proto.onrender.com";
 // const BASE_URL = "https://cryptocheck-proto-2seg-et9qtemzq.vercel.app";
-const FE_URL="https://qr-generator-tvao-cw8vznivn-mohammed-ajmals-projects-95362c99.vercel.app"
+//const FE_URL="https://qr-generator-tvao-cw8vznivn-mohammed-ajmals-projects-95362c99.vercel.app"
 // const FE_URL="http://localhost:5173"
 
 const QrGenerator = () => {
@@ -178,9 +179,9 @@ const handleFileUpload = (e) => {
 
   const uploadGeneratedData = async (data) => {
     try {
-      const rr=await fetch(`${BASE_URL}/api`)
+      const rr=await fetch(`${FE_URL}/api`)
       console.log(rr,"test response to check auth")
-      const response = await fetch(`${BASE_URL}/api/data`, {
+      const response = await fetch(`${FE_URL}/api/data`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

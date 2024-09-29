@@ -178,7 +178,7 @@ const handleFileUpload = (e) => {
 
   const uploadGeneratedData = async (data) => {
     try {
-      const rr=await fetch(`${BASE_URL}/api`)
+      //const rr=await fetch(`${BASE_URL}/api`)
       console.log(rr,"test response to check auth")
       const response = await fetch(`${BASE_URL}/api/data`, {
         method: "POST",

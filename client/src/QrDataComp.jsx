@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './QrDataComp.css'; // Import the CSS file
-import {FE_URL} from '../config.jsx'
+import {FE_URL, BASE_URL} from '../config.jsx'
 
 import check from './assets/check.png';
 
@@ -22,7 +22,7 @@ const QrDataComponent = () => {
   const fetchData = async (qrId) => {
     try {
       setLoading(true);
-      const response = await fetch(`${FE_URL}/api/qr-data/${qrId}`); // Replace with your API endpoint
+      const response = await fetch(`${BASE_URL}/api/qr-data/${qrId}`); // Replace with your API endpoint
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }

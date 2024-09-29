@@ -7,8 +7,10 @@ import "./App.css";
 import Certificate2 from "./Certificate2";
 
 // const BASE_URL = "http://localhost:9098";
-const BASE_URL = "https://cryptocheck-proto-2seg-et9qtemzq.vercel.app";
-const FE_URL="http://localhost:5173"
+const BASE_URL = "https://cryptocheck-proto.onrender.com";
+// const BASE_URL = "https://cryptocheck-proto-2seg-et9qtemzq.vercel.app";
+const FE_URL="https://qr-generator-tvao-cw8vznivn-mohammed-ajmals-projects-95362c99.vercel.app"
+// const FE_URL="http://localhost:5173"
 
 const QrGenerator = () => {
   const [excelData, setExcelData] = useState([]);

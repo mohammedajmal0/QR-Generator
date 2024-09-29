@@ -10,7 +10,8 @@ const mockData = {
   qrId: "QR12345"
 };
 const FE_URL="https://qr-generator-tvao-cw8vznivn-mohammed-ajmals-projects-95362c99.vercel.app"
-const BASE_URL="https://cryptocheck-proto.onrender.com"
+// const BASE_URL="https://cryptocheck-proto.onrender.com"
+const BASE_URL="http://localhost:9098"
 const QrDataComponent = () => {
   const { qrId } = useParams(); // Extract QrId from the URL
   const [data, setData] = useState(null);

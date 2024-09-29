@@ -6,7 +6,8 @@ import * as XLSX from "xlsx";
 import "./App.css";
 import Certificate2 from "./Certificate2";
 
-const BASE_URL = "http://localhost:9098";
+// const BASE_URL = "http://localhost:9098";
+const BASE_URL = "https://cryptocheck-proto-2seg-et9qtemzq.vercel.app";
 const FE_URL="http://localhost:5173"
 
 const QrGenerator = () => {
@@ -175,6 +176,8 @@ const handleFileUpload = (e) => {
 
   const uploadGeneratedData = async (data) => {
     try {
+      const rr=await fetch(`${BASE_URL}/api`)
+      console.log(rr,"test response to check auth")
       const response = await fetch(`${BASE_URL}/api/data`, {
         method: "POST",
         headers: {

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { BASE_URL } from '../config.jsx';
 import './QrDataComp.css'; // Import the CSS file
-import {FE_URL, BASE_URL} from '../config.jsx'
 
 import check from './assets/check.png';
+import redCross from './assets/redCross.png';
 
 const mockData = {
   name: "John Doe",
@@ -92,7 +93,20 @@ const QrDataComponent = () => {
     </div>
     </div>
     ) : (
-      <p>No data found for this QR ID.</p>
+      <div className="w-screen h-screen flex items-center justify-center">
+        <div className="w-full max-w-md mx-auto bg-white shadow-2xl rounded-lg overflow-hidden">
+          <div className="p-6">
+            <div className="flex flex-col items-center mb-6">
+              <img
+                src={redCross} 
+                alt="Red Cross"
+                className="w-16 h-16 text-red-500 mb-2"
+              />
+              <h2 className="text-2xl font-bold text-gray-800">No Data Found</h2>
+            </div>
+          </div>
+        </div>
+      </div>
     )}
 
 </>

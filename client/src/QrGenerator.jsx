@@ -3,9 +3,9 @@ import jsPDF from "jspdf";
 import QRCode from "qrcode";
 import React, { useState } from "react";
 import * as XLSX from "xlsx";
+import { BASE_URL, FE_URL } from '../config.jsx';
 import "./App.css";
 import Certificate2 from "./Certificate2";
-import {FE_URL, BASE_URL} from '../config.jsx';
 
 //const BASE_URL = "http://localhost:9098";
 // const BASE_URL = "https://cryptocheck-proto.onrender.com";
@@ -19,6 +19,7 @@ const QrGenerator = () => {
   const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [currentData, setCurrentData] = useState(null);
   const [generatedCertificates, setGeneratedCertificates] = useState([]);
+  const [generatedCerificateData,setGeneratedCertificateData]=useState([])
 
   // Handle Excel file upload
 //   const handleFileUpload = (e) => {
@@ -171,9 +172,8 @@ const handleFileUpload = (e) => {
 
     // Now set the generated certificates after the loop completes
     setGeneratedCertificates(generatedData);
-    console.log(generatedData);
-
-    uploadGeneratedData(generatedData)
+    console.log(generatedData,"generated data");
+    setGeneratedCertificateData(generatedData)
     
   };
 
@@ -204,7 +204,8 @@ const handleFileUpload = (e) => {
 
   
 
-  const uploadCertificates = (certificates) => {
+  const uploadCertificates = async (certificates) => {
+    await uploadGeneratedData(generatedCerificateData)
     certificates.forEach((cert) => {
       // Capture the certificate layout as an image using html2canvas
       html2canvas(document.getElementById(`cert-${cert.QrId}`), {

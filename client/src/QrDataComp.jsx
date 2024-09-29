@@ -9,7 +9,8 @@ import redCross from './assets/redCross.png';
 const mockData = {
   name: "John Doe",
   registrationNumber: "2023-7890-1XXX",
-  qrId: "QR12345"
+  qrId: "QR12345",
+  Date:"23-feb-2024"
 };
 // const FE_URL="https://qr-generator-tvao-cw8vznivn-mohammed-ajmals-projects-95362c99.vercel.app"
 // const BASE_URL="https://cryptocheck-proto.onrender.com"
@@ -88,6 +89,10 @@ const QrDataComponent = () => {
             <p className="text-sm text-gray-500">QR ID</p>
             <p className="font-medium text-gray-800">{data?.QrId || mockData.qrId}</p>
           </div>
+          <div>
+            <p className="text-sm text-gray-500">Issued Date</p>
+            <p className="font-medium text-gray-800">{data?.Date || mockData.Date}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -102,7 +107,7 @@ const QrDataComponent = () => {
                 alt="Red Cross"
                 className="w-16 h-16 text-red-500 mb-2"
               />
-              <h2 className="text-2xl font-bold text-gray-800">No Data Found</h2>
+              <h2 className="text-2xl font-bold text-gray-800">No Data Found For this QR</h2>
             </div>
           </div>
         </div>

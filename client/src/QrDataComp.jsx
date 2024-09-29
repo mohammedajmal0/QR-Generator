@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import './QrDataComp.css'; // Import the CSS file
+import {FE_URL} from '../config.jsx'
 
 import check from './assets/check.png';
 
@@ -9,9 +10,9 @@ const mockData = {
   registrationNumber: "2023-7890-1XXX",
   qrId: "QR12345"
 };
-const FE_URL="https://qr-generator-tvao-cw8vznivn-mohammed-ajmals-projects-95362c99.vercel.app"
+// const FE_URL="https://qr-generator-tvao-cw8vznivn-mohammed-ajmals-projects-95362c99.vercel.app"
 // const BASE_URL="https://cryptocheck-proto.onrender.com"
-const BASE_URL="http://localhost:9098"
+// const BASE_URL="http://localhost:9098"
 const QrDataComponent = () => {
   const { qrId } = useParams(); // Extract QrId from the URL
   const [data, setData] = useState(null);
@@ -21,7 +22,7 @@ const QrDataComponent = () => {
   const fetchData = async (qrId) => {
     try {
       setLoading(true);
-      const response = await fetch(`${BASE_URL}/api/qr-data/${qrId}`); // Replace with your API endpoint
+      const response = await fetch(`${FE_URL}/api/qr-data/${qrId}`); // Replace with your API endpoint
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }

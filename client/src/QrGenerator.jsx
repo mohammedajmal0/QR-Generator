@@ -267,8 +267,8 @@ const handleFileUpload = (e) => {
           onChange={(e) => setDocumentType(e.target.value)}
           className="document-select"
         >
-          <option value="certificate">Certificate</option>
-          <option value="certificate2">Certificate2</option>
+          <option value="certificate">University of Higher Learning-Certificate</option>
+          <option value="certificate2">Bank of America-Cheque</option>
         </select>
 
         <button onClick={handleGenerate} className="generate-button">

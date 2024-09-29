@@ -7,7 +7,7 @@ import "./App.css";
 import Certificate2 from "./Certificate2";
 
 const BASE_URL = "http://localhost:9098";
-const FE_URL="https://f1a2-78-129-150-13.ngrok-free.app"
+const FE_URL="http://localhost:5173"
 
 const QrGenerator = () => {
   const [excelData, setExcelData] = useState([]);
@@ -175,7 +175,7 @@ const handleFileUpload = (e) => {
 
   const uploadGeneratedData = async (data) => {
     try {
-      const response = await fetch(`${FE_URL}/api/data`, {
+      const response = await fetch(`${BASE_URL}/api/data`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -225,7 +225,7 @@ const handleFileUpload = (e) => {
         formData.append("fileType", "application/pdf");
 
         // Upload the certificate PDF to the server
-        fetch(`${FE_URL}/api/upload?fileName=${cert.RegisterNumber}`, {
+        fetch(`${BASE_URL}/api/upload?fileName=${cert.RegisterNumber}`, {
           method: "POST",
           body: formData,
         })

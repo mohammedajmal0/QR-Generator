@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { BASE_URL, FE_URL } from '../config.jsx';
 import "./App.css";
 import Certificate2 from "./Certificate2";
+// import certificateSample from './assets/sample1.xlsx';
 
 //const BASE_URL = "http://localhost:9098";
 // const BASE_URL = "https://cryptocheck-proto.onrender.com";
@@ -14,8 +15,8 @@ import Certificate2 from "./Certificate2";
 // const FE_URL="http://localhost:5173"
 
 const filePaths={
-  certificate:"./assets/sample1.xlsx",
-  bankDocument : "./assets/sample2.xlsx"
+  certificate:"../public/assets/sample1.xlsx",
+  bankDocument : "../public/assets/sample2.xlsx"
 }
 
 const requiredParams = {

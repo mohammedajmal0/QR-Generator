@@ -15,8 +15,8 @@ import Certificate2 from "./Certificate2";
 // const FE_URL="http://localhost:5173"
 
 const filePaths={
-  certificate:"../public/assets/sample1.xlsx",
-  bankDocument : "../public/assets/sample2.xlsx"
+  certificate:"/assets/sample1.xlsx",
+  bankDocument : "/assets/sample2.xlsx"
 }
 
 const requiredParams = {

@@ -275,7 +275,7 @@ const selectedParams = requiredParams[documentType];
       </div>
 
       <a href={selectedFile} download className="download-button">
-        Download Sample Excel
+        Download Sample Excelsheet
         </a>
 
         <div className="parameters-box">
